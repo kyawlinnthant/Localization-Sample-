@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">LocalizedLanguageSample</string>
+    <string name="english">English</string>
+    <string name="china">China</string>
+    <string name="japan">Japan</string>
+    <string name="hello">Hello World</string>
+</resources>

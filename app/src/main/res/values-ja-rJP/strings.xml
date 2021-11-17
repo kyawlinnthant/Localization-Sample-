@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ローカライズされた言語のサンプル</string>
+    <string name="english">英語</string>
+    <string name="china">中国</string>
+    <string name="japan">日本</string>
+    <string name="hello">こんにちは世界</string>
+</resources>
