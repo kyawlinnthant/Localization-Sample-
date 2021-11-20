@@ -38,23 +38,28 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.lang_en -> {
-                LocaleHelper(this).setLangEnglish()
+                viewModel.setLang(DataStoreSourceImpl.LANG_EN)
+                LocaleHelper(this).setNewLocale(DataStoreSourceImpl.LANG_EN)
                 this.recreate()
                 return true
             }
             R.id.lang_ja -> {
-                LocaleHelper(this).setLangJapanese()
+                viewModel.setLang(DataStoreSourceImpl.LANG_JP)
+                LocaleHelper(this).setNewLocale(DataStoreSourceImpl.LANG_JP)
                 this.recreate()
                 return true
             }
             R.id.lang_zh -> {
-                LocaleHelper(this).setLangChina()
+                viewModel.setLang(DataStoreSourceImpl.LANG_CN)
+                LocaleHelper(this).setNewLocale(DataStoreSourceImpl.LANG_CN)
                 this.recreate()
                 return true
             }
+            else -> {
+                return super.onOptionsItemSelected(item)
+            }
 
         }
-        return super.onOptionsItemSelected(item)
     }
 
 }

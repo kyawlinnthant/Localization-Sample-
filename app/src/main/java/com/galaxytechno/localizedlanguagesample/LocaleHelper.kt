@@ -3,42 +3,61 @@ package com.galaxytechno.localizedlanguagesample
 import android.content.Context
 import android.os.Build
 import android.os.LocaleList
-import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class LocaleHelper(
-    @ApplicationContext private val context: Context
+class LocaleHelper @Inject constructor(
+    private val context: Context
 ) {
+    @EntryPoint
+    @InstallIn(SingletonComponent::class)
+    interface LocaleHelperEntryPoint {
+        fun getDs(): DataStoreSource
+    }
 
-    //todo : how to make this initialization of DS with Hilt?
-    @Inject
-    lateinit var ds: DataStoreSource
+    private val ds =
+        EntryPointAccessors
+            .fromApplication(context, LocaleHelperEntryPoint::class.java)
+            .getDs()
+
     private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+
 
     fun setCurrentLocale(): Context {
         return updateResources(getLangFromDs())
     }
 
-    private fun setNewLocale(lang: String): Context {
+    fun setNewLocale(lang: String): Context {
         return updateResources(lang)
     }
 
     private fun getLangFromDs(): String {
-        var defLang = DataStoreSourceImpl.LANG_CN
+        var defLang: String = ""
+        //todo : this is where we have to access the Ds
+        // dataStoreSource, ds
 
         applicationScope.launch {
+
             ds.getLangState().collect {
                 defLang = it
+                Timber.tag("df1").d(it)
+                Timber.tag("df2").d(defLang)
+                withContext(Dispatchers.Main) {
+                    defLang = it
+                    updateResources(defLang)
+                }
             }
+
         }
+
+        Timber.tag("df3").d(defLang)
         return defLang
     }
 
@@ -76,17 +95,5 @@ class LocaleHelper(
         }
 
         return mContext
-    }
-
-    fun setLangJapanese() {
-        setNewLocale(getLangFromDs())
-    }
-
-    fun setLangEnglish() {
-        setNewLocale(getLangFromDs())
-    }
-
-    fun setLangChina() {
-        setNewLocale(getLangFromDs())
     }
 }

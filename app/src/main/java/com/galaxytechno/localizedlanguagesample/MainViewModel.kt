@@ -30,5 +30,10 @@ class MainViewModel @Inject constructor(
             }
         }
     }
+    fun setLang(lang : String){
+        viewModelScope.launch {
+            ds.saveLangState(lang)
+        }
+    }
 
 }
