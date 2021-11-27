@@ -1,6 +1,8 @@
 package com.galaxytechno.localizedlanguagesample
 
 import android.content.Context
+import android.content.ContextWrapper
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -23,11 +25,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     override fun attachBaseContext(newBase: Context?) {
         newBase?.let {
-            super.attachBaseContext(LocaleHelper(it).setCurrentLocale())
+            val localeBase = LocaleHelper(it).setCurrentLocale()
+            super.attachBaseContext(ContextWrapper(localeBase))
         }
+    }
+
+    override fun applyOverrideConfiguration(overrideConfiguration: Configuration?) {
+        overrideConfiguration?.let {
+            val uiMode = it.uiMode
+            it.setTo(baseContext.resources.configuration)
+            it.uiMode = uiMode
+        }
+        super.applyOverrideConfiguration(overrideConfiguration)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -39,27 +50,22 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.lang_en -> {
                 viewModel.setLang(DataStoreSourceImpl.LANG_EN)
-                LocaleHelper(this).setNewLocale(DataStoreSourceImpl.LANG_EN)
-                this.recreate()
-                return true
+//                LocaleHelper(this).setNewLocale(DataStoreSourceImpl.LANG_EN)
             }
             R.id.lang_ja -> {
                 viewModel.setLang(DataStoreSourceImpl.LANG_JP)
-                LocaleHelper(this).setNewLocale(DataStoreSourceImpl.LANG_JP)
-                this.recreate()
-                return true
+//                LocaleHelper(this).setNewLocale(DataStoreSourceImpl.LANG_JP)
             }
             R.id.lang_zh -> {
                 viewModel.setLang(DataStoreSourceImpl.LANG_CN)
-                LocaleHelper(this).setNewLocale(DataStoreSourceImpl.LANG_CN)
-                this.recreate()
-                return true
+//                LocaleHelper(this).setNewLocale(DataStoreSourceImpl.LANG_CN)
             }
             else -> {
                 return super.onOptionsItemSelected(item)
             }
-
         }
+        this.recreate()
+        return true
     }
 
 }

@@ -6,6 +6,7 @@ import android.os.LocaleList
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
@@ -14,7 +15,7 @@ import java.util.*
 import javax.inject.Inject
 
 class LocaleHelper @Inject constructor(
-    private val context: Context
+    @ApplicationContext private val context: Context
 ) {
     @EntryPoint
     @InstallIn(SingletonComponent::class)

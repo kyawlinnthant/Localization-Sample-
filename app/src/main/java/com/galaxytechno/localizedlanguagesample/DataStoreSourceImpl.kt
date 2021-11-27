@@ -3,9 +3,12 @@ package com.galaxytechno.localizedlanguagesample
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
+import java.io.IOException
 
 class DataStoreSourceImpl(
     private val ds: DataStore<Preferences>
@@ -26,8 +29,13 @@ class DataStoreSourceImpl(
     }
 
     override suspend fun getLangState(): Flow<String> {
-        return ds.data.map {
-            it[LANG_STATUS] ?: LANG_EN
+        return ds.data
+            .catch { exception ->
+                if (exception is IOException) emit(emptyPreferences())
+                else throw  exception
+            }
+            .map {
+            it[LANG_STATUS] ?: LANG_JP
         }
     }
 

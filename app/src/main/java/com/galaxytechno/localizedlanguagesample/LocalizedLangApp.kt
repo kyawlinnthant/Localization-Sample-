@@ -2,6 +2,7 @@ package com.galaxytechno.localizedlanguagesample
 
 import android.app.Application
 import android.content.Context
+import android.content.res.Configuration
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,9 +19,16 @@ class LocalizedLangApp : Application() {
     lateinit var dataStoreSource: DataStoreSource
     private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
-    override fun attachBaseContext(base: Context?) {
-        super.attachBaseContext(base)
+   /* override fun attachBaseContext(base: Context?) {
+        base?.let {
+            super.attachBaseContext(LocaleHelper(it).setCurrentLocale())
+        }
     }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        LocaleHelper(this).setCurrentLocale()
+    }*/
 
     override fun onCreate() {
         super.onCreate()
